@@ -65,6 +65,14 @@ function App() {
     totalRecords > 0
       ? ((suspiciousCount / totalRecords) * 100).toFixed(1)
       : 0;
+  
+  const suspiciousRecords = data.filter(
+    (row) =>
+      row.prediction === 1 ||
+      row.predicted_column === 1 ||
+      row.prediction === -1 ||
+      row.predicted_column === -1
+  );
 
   const chartData = [
     {
@@ -241,6 +249,93 @@ function App() {
 
           )
         }
+
+        {
+  suspiciousRecords.length > 0 && (
+
+    <div
+      className="dashboard-card results-section"
+    >
+
+      <h2 className="results-title">
+        Suspicious Records Detected
+      </h2>
+
+      <div className="table-wrapper">
+
+        <table className="table table-dark table-hover">
+
+          <thead>
+
+            <tr>
+
+              {
+                Object.keys(
+                  suspiciousRecords[0]
+                ).map(
+                  (key) => (
+                    <th key={key}>
+                      {key}
+                    </th>
+                  )
+                )
+              }
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            {
+              suspiciousRecords.map(
+                (row,index)=>(
+
+                  <tr key={index}>
+
+                    {
+                      Object.values(row).map(
+                        (value,i)=>(
+
+                          <td
+                            key={i}
+                            className={
+                              value === 1 ||
+                              value === -1
+                                ? "danger-cell"
+                                : ""
+                            }
+                          >
+
+                            {
+                              value === 1 ||
+                              value === -1
+                                ? "Suspicious"
+                                : value
+                            }
+
+                          </td>
+
+                        )
+                      )
+                    }
+
+                  </tr>
+
+                )
+              )
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  )
+}
 
         {
           data.length > 0 && (
